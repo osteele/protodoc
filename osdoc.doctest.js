@@ -95,12 +95,3 @@ Model.prototype.runTests = function() {
         }
     };
 }
-
-
-OSDoc.APIDoc.prototype.getTestText = function() {
-    return this.model.getTestText();
-}
-
-OSDoc.APIDoc.prototype.runTests = function() {
-    return this.testResults = this.model.runTests();
-}

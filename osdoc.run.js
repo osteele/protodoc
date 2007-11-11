@@ -16,12 +16,13 @@ load('osdoc.js');
 load('osdoc.utils.js');
 load('osdoc.apidoc.js');
 load('osdoc.doctest.js');
+load('osdoc.output.html.js');
 
 var pluck = Functional.pluck;
 
 function process(files, options) {
     var text = files.map('readFile(_)').join(''),
-        model = new OSDoc.APIDoc.Parser({}).parse(text);
+        model = new OSDoc.Parser({}).parse(text);
     if (options.test) {
         print(model.runTests().toHTML());
     } else if (options.tests) {

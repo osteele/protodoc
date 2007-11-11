@@ -6,6 +6,7 @@
  */
 
 var window = {};
+document = {getElementsByTagName:function(){return []}};
 window.OSDoc = {loaded:true};
 window.Prototype = {Version:1.5};
 load('../collection-utils.js');
@@ -14,7 +15,8 @@ load('../functional/to-function.js');
 load('Base.js')
 load('osdoc.js');
 load('osdoc.utils.js');
-load('osdoc.apidoc.js');
+load('osdoc.model.js');
+load('osdoc.parser.js');
 load('osdoc.doctest.js');
 load('osdoc.output.html.js');
 

@@ -91,4 +91,4 @@ function makeEnum(words) {
  * Finally:
  */
 
-OSDoc.loaded || OSDoc.load();
+window.OSDoc.loaded || OSDoc.load();

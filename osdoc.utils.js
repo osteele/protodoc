@@ -5,6 +5,20 @@
  * Source: http://osteele.com/javascripts/osdoc
  */
 
+var OSUtils = window.OSUtils || {};
+
+OSUtils.toString = function(value) {
+    if (value instanceof Array) {
+        var spans = map(OSUtils.toString, value);
+        return '[' + spans.join(', ') + ']';
+    }
+    switch (typeof(value)) {
+    case 'function': return 'function()';
+    case 'string': return '"' + value + '"';
+    default: return value ? value.toString() : ''+value;
+    }
+}
+
 Function.prototype.reporting = function() {
     var fn = this;
     return function() {

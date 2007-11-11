@@ -114,7 +114,7 @@ CommentParser.prototype = {
         for (var i = 0; i < rules.length; ) {
             var item = rules[i++],
                 action = rules[i++],
-                match = item(line);
+                match = item.exec(line);
             if (match) {
                 if (typeof action == 'function')
                     action.apply(this, match.slice(1));
@@ -211,29 +211,30 @@ StateMachineParser.makeStateTable = function(ruleList, tokens) {
             rhs = ruleList[i++],
             src = pattern;
         if (src instanceof RegExp) {
-            src = pattern.toSource();
+            src = String(pattern);//.toSource();
             src = src.slice(1, src.lastIndexOf('/'));
         }
         src = src.replace(/#{(.+?)}/g, function(s, m) {return tokens[m] || s});
         var re = new RegExp('^'+src, 'g'),
-            prefixMatch = /^([^\(\[\\\.\*])|^\\([^swdbnt])/(src);
+            prefixMatch = /^([^\(\[\\\.\*])|^\\([^swdbnt])/.exec(src);
         if (testPrefix && prefixMatch) {
             var prefixChar = prefixMatch[1] || prefixMatch[2];
             re = (function(re, src, prefixChar) {
                 return function(string) {
-                    var ix = re.lastIndex = arguments.callee.lastIndex,
+                    var ix = re.lastIndex = this.lastIndex,
                         match = (string.length > ix && string.charAt(ix) == prefixChar
-                                 && re(string));
+                                 && re.exec(string));
                     if (debug.doublecheck && !match && re(string)) {
                         var msg = "RE didn't match but string did";
                         console.error(msg, src, re, string);
                         throw msg;
                     }
                     if (match)
-                        arguments.callee.lastIndex = re.lastIndex;
+                        this.lastIndex = re.lastIndex;
                     return match;
                 }
             })(re, src, prefixChar);
+            re = {exec:re};
         }
         rules.push({
             source: src,
@@ -243,7 +244,6 @@ StateMachineParser.makeStateTable = function(ruleList, tokens) {
     }
     // String -> {state, position}
     return function(string, pos) {
-        //info('parsing', '"', string.slice(pos), '"');
         var base = 0;
         if (true) {
             var base = pos;
@@ -254,7 +254,7 @@ StateMachineParser.makeStateTable = function(ruleList, tokens) {
             var re = rule.re;
             trace.tries && console.info('trying', rule.source, 'at', pos, 'on', string.slice(pos, pos+40));
             re.lastIndex = pos;
-            if ((m = re(string)) && m[0].length) {
+            if ((m = re.exec(string)) && m[0].length) {
                 if (!(re.lastIndex-m[0].length == pos)) {
                     //info('!=', re.lastIndex, m[0].length, pos);
                     continue;

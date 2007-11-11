@@ -33,7 +33,7 @@ var Model = Base.extend({
     },
 
     findOrMake: function(name) {
-        var parts = /(.+?)\.(.+)/(name);
+        var parts = /(.+?)\.(.+)/.exec(name);
         if (parts)
             return this.findOrMake(parts[1]).findOrMake(parts[2]);
         var value = this.definitions.detect(function(defn) {

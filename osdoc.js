@@ -34,22 +34,7 @@ var OSDoc = {
         var src = map('.src', document.getElementsByTagName('script')).grep(/\bosdoc\.js/)[0];
         if (!src) return;
         var modules = Functional.K([_,'utils,examples,model,parser,doctest,view,output.html']).guard('!')(src.match(/\?.*load=([a-z,]*)/))[1].split(',');
-        modules.include('doctest') && modules.unshift('apidoc');
         map('a -> b -> a+"osdoc."+b+".js"'.call(null, src.replace(/[^\/]*$/,'')), modules).each(OSLoader.require.bind(OSLoader));
-    }
-}
-
-var OSUtils = window.OSUtils || {};
-
-OSUtils.toString = function(value) {
-    if (value instanceof Array) {
-        var spans = map(OSDoc.toString, value);
-        return '[' + spans.join(', ') + ']';
-    }
-    switch (typeof(value)) {
-    case 'function': return 'function()';
-    case 'string': return '"' + value + '"';
-    default: return value ? value.toString() : ''+value;
     }
 }
 
@@ -66,7 +51,7 @@ OSDoc.previewText = function(text) {
 OSDoc.stripHeader = function(text) {
     return text.replace(/^\s*\/\*[^*](?:.|\n)*?\*\/[ \t]*/,
                         function(s) {
-                            return /copyright/i(s) ? '' : s;
+                            return s.match(/copyright/i) ? '' : s;
                         });
 }
 

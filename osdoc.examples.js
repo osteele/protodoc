@@ -31,6 +31,7 @@ OSDoc.Examples.prototype.parse = function(text) {
 
 OSDoc.Examples.prototype.updateTarget = function(stage) {
     if (!this.options.target) return;
+
     var text = this.text;
     switch (stage) {
     case 0:

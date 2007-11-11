@@ -1,16 +1,4 @@
-/* Copyright 2007 by Oliver Steele.  Released under the MIT License. */
-
-/*
- * Author: Oliver Steele
- * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
- * License: MIT License
- * Source: http://osteele.com/javascripts/osdoc
- * Created: 2007-07-11
- * Modified: 2007-07-21
- *
- * Pre-release version; not ready for prime time.
- */
-
+/* Copyright 2007 by Oliver Steele.  Available under the MIT License. */
 
 /*
  * Domain Model

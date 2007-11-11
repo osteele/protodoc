@@ -38,7 +38,7 @@ OSDoc.Parser.prototype.parse = function(text) {
                     /[^\*]+/, null
             ]
         }});
-    var globals = new Model,
+    var globals = new GlobalContext,
         lastContainer = globals,
         docParser = new CommentParser;
     parser.parse(text);
@@ -59,21 +59,21 @@ OSDoc.Parser.prototype.parse = function(text) {
     function section() {
         var docs = getDocs();
         if (docs.length)
-            lastContainer.add(new SectionBlock(docs));
+            globals.addBlock(new SectionBlock(docs));
     }
     function defun(name, params) {
-        globals.add(new FunctionDefinition(name, params, {docs: getDocs()}));
+        globals.addDefinition(new FunctionDefinition(name, params, {docs: getDocs()}));
     }
     function defvar(name) {
-        globals.add(new VariableDefinition(name, {docs: getDocs()}));
+        globals.addDefinition(new VariableDefinition(name, {docs: getDocs()}));
     }
     function classMethod(path, name, params) {
         var container = lastContainer = globals.findOrMake(path);
-        container.add(new FunctionDefinition(name, params, {docs: getDocs()}));
+        container.addDefinition(new FunctionDefinition(name, params, {docs: getDocs()}));
     }
     function property(path, name) {
         var container = lastContainer = globals.findOrMake(path);
-        container.add(new VariableDefinition(name, {docs: getDocs()}));
+        container.addDefinition(new VariableDefinition(name, {docs: getDocs()}));
     }
 }
 

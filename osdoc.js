@@ -39,6 +39,8 @@ var OSDoc = {
     }
 }
 
+var OSUtils = window.OSUtils || {};
+
 OSUtils.toString = function(value) {
     if (value instanceof Array) {
         var spans = map(OSDoc.toString, value);

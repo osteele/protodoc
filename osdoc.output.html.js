@@ -13,12 +13,13 @@ function HTMLFormatter(options) {
 HTMLFormatter.prototype = {
     render: function(model) {
         var writer = this.writer = new RopeWriter;
-        model.definitions.each(this.definition.bind(this));
+        model.eachBlock(this.definition.bind(this));
         return writer.toString();
     },
 
     definition: function(defn) {
-        if (!this.options.all && !defn.docs.length && !defn.definitions.length) return;
+        if (!this.options.all && !defn.docs.length && !defn.definitions.length)
+            return;
         if (defn instanceof FunctionDefinition)
             this.functionDefinition(defn);
         else if (defn instanceof VariableDefinition)
@@ -32,7 +33,7 @@ HTMLFormatter.prototype = {
     },
 
     members: function(defn) {
-        defn.definitions.each(this.definition.bind(this));
+        //defn.definitions.each(this.definition.bind(this));
     },
 
     functionDefinition: function(defn) {

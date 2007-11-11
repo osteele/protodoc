@@ -1,12 +1,4 @@
-/*
- * Author: Oliver Steele
- * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
- * License: MIT License
- * Source: http://osteele.com/javascripts/osdoc
- * Created: 2007-07-13
- * Modified: 2007-07-16
- *
- * Pre-release version; not ready for prime time.
+/* Copyright 2007 by Oliver Steele.  Available under the MIT License.
  *
  * Inspired by Tim Peter's wonderful doctest for Python.
  */
@@ -71,14 +63,14 @@ Model.prototype.runTests = function() {
             test.error
             || failures.push({defn:defn, test:test, error:error});
         else if (test.expect != undefined &&
-                 OSDoc.toString(result) != test.expect)
+                 OSUtils.toString(result) != test.expect)
             failures.push({defn:defn, test:test, result:result});
     });
     var lines = [];
     failures.each(function(failure) {
         var message = (failure.error
                        ? [failure.test.text, ' throws ', failure.error]
-                       : [failure.test.text, ' -> ', OSDoc.toString(failure.result),
+                       : [failure.test.text, ' -> ', OSUtils.toString(failure.result),
                           ' != ', failure.test.expect]).join('');
         window.console && console.info(message);
         lines.push(failure.defn.name + ': ' + message);

@@ -1,13 +1,4 @@
-/* 
- * Author: Oliver Steele
- * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
- * License: MIT License
- * Source: http://osteele.com/javascripts/osdoc
- * Created: 2007-07-11
- * Modified: 2007-07-16
- *
- * Pre-release version; not ready for prime time.
- */
+/* Copyright 2007 by Oliver Steele.  Available under the MIT License. */
 
 // Options:
 //   headingLevel: hn for topmost headings; default 3
@@ -60,7 +51,7 @@ OSDoc.Examples.prototype.updateTarget = function(stage) {
 
 OSDoc.Examples.prototype.toHTML = function(fast) {
     var self = this;
-    var chunks = (OSDoc.unindent(this.text)
+    var chunks = (OSUtils.unindent(this.text)
                   .escapeHTML()
                   .split('trace('));
     var outputs = this.trace || [];
@@ -104,7 +95,7 @@ OSDoc.Examples.prototype.runExamples = function() {
     var results = this.trace = [];
     try {
         trace = function() {
-            var args = $A(arguments).map(OSDoc.toString);
+            var args = map(OSUtils.toString, arguments);
             results.push(args.join(' '));
         }
         var fn = new Function('trace', this.text);
@@ -115,20 +106,10 @@ OSDoc.Examples.prototype.runExamples = function() {
     }
 }
 
-OSDoc.unindent = function(text) {
-    var lines = text.split('\n');
-    var min = lines.grep(/\S/).map('_.match(/^\\s*/)[0].length'.lambda()).min();
+OSUtils.unindent = function(text) {
+    var lines = text.split('\n'),
+        min = lines.grep(/\S/).map('_.match(/^\\s*/)[0].length'.lambda()).min();
     return lines.map(function(line) {
         return line.slice(min);
-    }).join('\n');
-}
-
-function extractLines(string, startPattern, endPattern) {
-    var lines = string.split('\n');
-    var start = 1 + lines.indexOf(lines.grep(startPattern)[0]);
-    var segment = lines.slice(start);
-    var end = start + segment.indexOf(segment.grep(endPattern)[0]);
-    return unindent(lines.slice(start, end)).map(function(line) {
-        return line || ' ';
     }).join('\n');
 }

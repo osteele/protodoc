@@ -1,46 +1,45 @@
-/*
- * Author: Oliver Steele
- * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
- * License: MIT License
- * Source: http://osteele.com/javascripts/osdoc
- * Created: 2007-07-11
- * Modified: 2007-07-16
- *
- * Pre-release version; not ready for prime time.
- */
+/* Copyright 2007 by Oliver Steele.  Available under the MIT License. */
 
-var OSDoc = window.OSDoc || {};
-
-// Loading and initialization
-// The loader logic is adapted from the Scriptaculous loader.
-
-OSDoc.checkRequirements = function() {
-    if (!window.Prototype || parseFloat(Prototype.Version) < 1.5)
-        throw "OSDoc requires the Prototype JavaScript framework version >= 1.5";
-    if (!window.Functional)
-        throw "OSDoc requires the Functional JavaScript library";
+// This code runs before any libraries are loaded, so program like
+// it's 1999.
+var OSLoader = {
+    loadedModules: (function(){
+        var loaded = [];
+        var elements = document.getElementsByTagName('script');
+        for (var i = 0; i < elements.length; i++)
+            loaded.push(elements[i].src);
+        return loaded;
+    })(),
+    require: function(path) {
+        var loaded = this.loadedModules;
+        if (loaded.indexOf(path) >= 0) return;
+        loaded.push(path);
+        document.write('<script type="text/javascript" src="' + path +
+                       '"></script>');
+    }
 }
 
-OSDoc.loadedModules = [];
+var OSDoc = {
+    // for now, we need these to already be loaded
+    checkRequirements: function() {
+        if (!window.Prototype || parseFloat(Prototype.Version) < 1.5)
+            throw "OSDoc requires the Prototype JavaScript framework version >= 1.5";
+        if (!window.Functional)
+            throw "OSDoc requires the Functional JavaScript library";
+    },
 
-OSDoc.require = function(path) {
-    if (OSDoc.loadedModules.include(path))
-        return;
-    document.write('<script type="text/javascript" src="' + path + '"></script>');
-    OSDoc.loadedModules.push(path);
+    load: function() {
+        OSDoc.checkRequirements();
+        Functional.install();
+        var src = map('.src', document.getElementsByTagName('script')).grep(/\bosdoc\.js/)[0];
+        if (!src) return;
+        var modules = Functional.K([_,'utils,examples,apidoc,doctest,view,output.html']).guard('!')(src.match(/\?.*load=([a-z,]*)/))[1].split(',');
+        modules.include('doctest') && modules.unshift('apidoc');
+        map('a -> b -> a+"osdoc."+b+".js"'.call(null, src.replace(/[^\/]*$/,'')), modules).each(OSLoader.require.bind(OSLoader));
+    }
 }
 
-OSDoc.load = function() {
-    OSDoc.checkRequirements();
-    Functional.install();
-    var src = map('.src', document.getElementsByTagName('script')).grep(/\bosdoc\.js/)[0];
-    if (!src) return;
-    var modules = Functional.K([_,'utils,examples,apidoc,doctest,view,output.html']).guard('!')(src.match(/\?.*load=([a-z,]*)/))[1].split(',');
-    modules.include('doctest') && modules.unshift('apidoc');
-    map('a -> b -> a+"osdoc."+b+".js"'.call(null, src.replace(/[^\/]*$/,'')), modules).each(OSDoc.require);
-}
-
-OSDoc.toString = function(value) {
+OSUtils.toString = function(value) {
     if (value instanceof Array) {
         var spans = map(OSDoc.toString, value);
         return '[' + spans.join(', ') + ']';

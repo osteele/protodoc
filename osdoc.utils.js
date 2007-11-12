@@ -42,6 +42,13 @@ String.prototype.debugInspect = function() {
         return '\\' + (m[s]||s)}) + '"';
 }
 
+Hash.mergeAll = function(source) {
+    var dummy = {};
+    for (var p in source)
+        if (!(p in dummy))
+            this[p] = source[p];
+    return this;
+}
 
 /*
  * A RopeWriter accumulates strings with deferred concatenatation.

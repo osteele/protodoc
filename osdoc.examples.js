@@ -5,48 +5,50 @@
 //   target: an HTML Element that is set to the docs on completion
 //   onSuccess: called when load completes
 OSDoc.Examples = function(options) {
-    this.options = {headingLevel: 3,
-                    staged: true,
-                    onSuccess: Functional.I};
-    for (var name in options||{})
-        this.options[name] = options[name];
+    this.options = $H({headingLevel: 3,
+                       staged: true}).mergeAll(options||{});
 };
 
 // Load +url+ and parse its contents.
-OSDoc.Examples.prototype.load = function(url) {
-    this.options.target && (this.options.target.innerHTML = OSDoc.loadingHeader);
+OSDoc.Examples.prototype.load = function(url, options) {
+    options = $H(this.options).mergeAll(options||{});
+    var target = options.target && $(options.target);
+    target && (target.innerHTML = OSDoc.loadingHeader);
     new Ajax.Request(
         url,
         {method: 'GET',
-         onSuccess: Functional.compose(this.parse.bind(this), '_.responseText').reporting()});
+         onSuccess: function(response) {
+             this.parse(response.responseText, options);
+         }.bind(this).reporting()});
     return this;
 }
 
 // Parse +text+.  If +options.target+ is specified, update it.
-OSDoc.Examples.prototype.parse = function(text) {
+OSDoc.Examples.prototype.parse = function(text, options) {
     this.text = OSDoc.stripHeader(text);
-    this.updateTarget(this.options.staged && 0);
+    this.updateTarget(this.options.staged && 0, options);
     return this;
 }
 
-OSDoc.Examples.prototype.updateTarget = function(stage) {
-    if (!this.options.target) return;
+OSDoc.Examples.prototype.updateTarget = function(stage, options) {
+    var target = options.target && $(options.target);
+    if (!target) return options.onSuccess && options.onSuccess();
 
     var text = this.text;
     switch (stage) {
     case 0:
-        this.options.target.innerHTML = OSDoc.previewText(text);
+        target.innerHTML = OSDoc.previewText(text);
         break;
     case 1:
-        this.options.target.innerHTML = OSDoc.processingHeader + this.toHTML(true);
+        target.innerHTML = OSDoc.processingHeader + this.toHTML(true);
         break;
     case 2:
         this.runExamples();
-        this.options.target.innerHTML = this.toHTML();
-        this.options.onSuccess();
+        target.innerHTML = this.toHTML();
+        options.onSuccess && options.onSuccess();
         return this;
     }
-    this.updateTarget.bind(this).saturate(stage+1).delayed(10);
+    this.updateTarget.bind(this).saturate(stage+1, options).delayed(10);
     return this;
 }
 

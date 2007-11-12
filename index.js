@@ -7,18 +7,16 @@
  * Modified: 2007-07-16
  */
 
-var info = window.console && console.info || function(){};
-
 function initialize() {
     var src = (window.location.search.match(/[\?&]source=([^&]*)/)||{})[1];
     if (!src && !window.location.search.match(/[\?&]test\b/)) {
         $$('#noscript', 'table', '#header hr').invoke('hide');
         return;
     }
-    src || new OSDoc.APIDoc({onSuccess: done.saturate('examples'), target: $('examples')}).load('osdoc.examples.js');
+    src || new OSDoc.APIDoc({onSuccess: noteCompletion.saturate('examples'), target: $('examples')}).load('osdoc.examples.js');
     src && Element.hide('examples-column');
-    src && done('examples');
-    new OSDoc.APIDoc({onSuccess: done.saturate('api'),
+    src && noteCompletion('examples');
+    new OSDoc.APIDoc({onSuccess: noteCompletion.saturate('api'),
                       all: src,
                       target: $('docs')}).load(src || 'osdoc.apidoc.js');
     initializeHeaderToggle();
@@ -34,7 +32,6 @@ function initializeHeaderToggle() {
 }
 
 function initializeTestLinks() {
-    info('disabled test links'); return;
     Event.observe('run-tests', 'click', function(e) {
         Event.stop(e);
         var results = gDocs.runTests();
@@ -47,7 +44,7 @@ function initializeTestLinks() {
     });
 }
 
-function done(flag) {
+function noteCompletion(flag) {
     var callee = arguments.callee;
     callee[flag] = true;
     if (callee.docs && callee.examples) {

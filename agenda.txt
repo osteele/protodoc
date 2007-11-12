@@ -1,6 +1,5 @@
 Next:
-- split view
-- formatters: html, tests
+- factor into builder
 - rename -> protodoc, if it's available
 
 Fix HTML:

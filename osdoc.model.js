@@ -24,7 +24,8 @@ var Model = Base.extend({
                 return defn.name == name;
             });
         if (defn instanceof Model && value) {
-            throw "duplicate definition in " + this + ": " + defn.name;
+            window.console && console.info &&
+                console.info("duplicate definition in " + this + ": " + defn.name);
         };
         this.addBlock(defn);
         defn.container = this;
@@ -97,7 +98,7 @@ var VariableDefinition = Model.extend({
 var FunctionDefinition = VariableDefinition.extend({
     constructor: function(name, params, options) {
         this.base(name, options);
-        this.parameters = params.split(/,/).select(pluck('length'));
+        this.parameters = (params||'').split(/,/).select(pluck('length'));
     },
 
     toString: function() {

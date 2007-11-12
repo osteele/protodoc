@@ -21,6 +21,8 @@ OSDoc.Parser.prototype.parse = function(text) {
                     /function (#{id})\s*\((.*?)\).*/, defun,
                     /var\s+(#{id})\s*=.*/, defvar,
                         /(#{id}(?:\.#{id})*)\.(#{id})\s*=\s*function\s*\((.*?)\).*/, classMethod,
+                        // a = a || function(...)
+                        /(#{id}(?:\.#{id})*)\.(#{id})\s*=\s*\S+\s*||\s*function\s*\((.*?)\).*/, classMethod,
                         /\n\n/, section,
                         /.*\n/, null,
                         // solitary chars on the last line:

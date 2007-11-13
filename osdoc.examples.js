@@ -5,13 +5,13 @@
 //   target: an HTML Element that is set to the docs on completion
 //   onSuccess: called when load completes
 OSDoc.Examples = function(options) {
-    this.options = $H({headingLevel: 3,
-                       staged: true}).mergeAll(options||{});
+    this.options = OSUtils.merge({headingLevel: 3,
+                                  staged: true}, options||{});
 };
 
 // Load +url+ and parse its contents.
 OSDoc.Examples.prototype.load = function(url, options) {
-    options = $H(this.options).mergeAll(options||{});
+    options = OSUtils.merge(this.options, options||{});
     var target = options.target && $(options.target);
     target && (target.innerHTML = OSDoc.loadingHeader);
     new Ajax.Request(

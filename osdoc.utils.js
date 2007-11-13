@@ -42,12 +42,12 @@ String.prototype.debugInspect = function() {
         return '\\' + (m[s]||s)}) + '"';
 }
 
-Hash.mergeAll = function(source) {
+OSUtils.merge = function(target, source) {
     var dummy = {};
     for (var p in source)
         if (!(p in dummy))
-            this[p] = source[p];
-    return this;
+            target[p] = source[p];
+    return target;
 }
 
 /*

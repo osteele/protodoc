@@ -9,8 +9,8 @@
  *   onSuccess: called when load completes
  */
 OSDoc.APIDoc = function(options) {
-    this.options = $H({headingLevel: 3,
-                       staged: true}).mergeAll(options||{});
+    this.options = OSUtils.merge({headingLevel: 3,
+                                  staged: true}, options||{});
 };
 
 /// Load +url+ and parse its contents.
@@ -19,7 +19,7 @@ OSDoc.APIDoc.prototype.load = function(url, supplementalOptions) {
         options = this.options,
         urls = Array.prototype.slice.call(arguments, 0);
     if (typeof urls[urls.length-1] != 'string')
-        options = $H(options).mergeAll(urls.pop());
+        options = OSUtils.merge(options, urls.pop());
     var count = urls.length,
         results = new Array(count),
         target = options.target && $(options.target);

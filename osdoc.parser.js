@@ -131,9 +131,8 @@ CommentParser.prototype = {
     },
 
     create: function(type, options) {
-        var lines = [];
-        var block = this.block = {type:type, lines:lines, append:lines.push.bind(lines)};
-        block = $H(block).merge(options||{});
+        var lines = [],
+            block = this.block = OSUtils.merge({type:type, lines:lines, append:lines.push.bind(lines)}, options||{});
         this.blocks.push(block);
         return block;
     },

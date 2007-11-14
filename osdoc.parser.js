@@ -12,7 +12,7 @@ OSDoc.Parser.prototype.parse = function(text) {
     var id = '[a-zA-Z_$][a-zA-Z_$0=9]*';
     var parser = new StateMachineParser({
         tokens: {
-            id: id,
+            id: id
         },
         states: {
             initial: [

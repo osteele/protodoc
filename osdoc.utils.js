@@ -20,6 +20,7 @@ OSUtils.toString = function(value) {
 }
 
 Function.prototype.reporting = function() {
+    if (!window.console) return this;
     var fn = this;
     return function() {
         try {

@@ -4,13 +4,13 @@
 //   headingLevel: hn for topmost headings; default 3
 //   target: an HTML Element that is set to the docs on completion
 //   onSuccess: called when load completes
-OSDoc.Examples = function(options) {
+OSDoc.ExampleViewer = function(options) {
     this.options = OSUtils.merge({headingLevel: 3,
                                   staged: true}, options||{});
 };
 
 // Load +url+ and parse its contents.
-OSDoc.Examples.prototype.load = function(url, options) {
+OSDoc.ExampleViewer.prototype.load = function(url, options) {
     options = OSUtils.merge(this.options, options||{});
     var target = options.target && $(options.target);
     target && (target.innerHTML = OSDoc.loadingHeader);
@@ -24,13 +24,13 @@ OSDoc.Examples.prototype.load = function(url, options) {
 }
 
 // Parse +text+.  If +options.target+ is specified, update it.
-OSDoc.Examples.prototype.parse = function(text, options) {
+OSDoc.ExampleViewer.prototype.parse = function(text, options) {
     this.text = OSDoc.stripHeader(text);
     this.updateTarget(this.options.staged && 0, options);
     return this;
 }
 
-OSDoc.Examples.prototype.updateTarget = function(stage, options) {
+OSDoc.ExampleViewer.prototype.updateTarget = function(stage, options) {
     var target = options.target && $(options.target);
     if (!target) return options.onSuccess && options.onSuccess();
 
@@ -52,7 +52,7 @@ OSDoc.Examples.prototype.updateTarget = function(stage, options) {
     return this;
 }
 
-OSDoc.Examples.prototype.toHTML = function(fast) {
+OSDoc.ExampleViewer.prototype.toHTML = function(fast) {
     var self = this;
     var chunks = (OSUtils.unindent(this.text)
                   .escapeHTML()
@@ -94,7 +94,7 @@ OSDoc.Examples.prototype.toHTML = function(fast) {
     return html;
 }
 
-OSDoc.Examples.prototype.runExamples = function() {
+OSDoc.ExampleViewer.prototype.runExamples = function() {
     var results = this.trace = [];
     try {
         trace = function() {

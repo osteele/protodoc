@@ -8,18 +8,18 @@
  *   target: an HTML Element that is set to the docs on completion
  *   onSuccess: called when load completes
  */
-OSDoc.APIDoc = function(options) {
+OSDoc.APIViewer = function(options) {
     this.options = OSUtils.merge({headingLevel: 3,
                                   staged: true}, options||{});
 };
 
 /// Load +url+ and parse its contents.
-OSDoc.APIDoc.prototype.load = function(url, supplementalOptions) {
+OSDoc.APIViewer.prototype.load = function(url, _options) {
     var self = this,
         options = this.options,
         urls = Array.prototype.slice.call(arguments, 0);
-    if (typeof urls[urls.length-1] != 'string')
-        options = OSUtils.merge(options, urls.pop());
+    if (typeof urls[urls.length-1] == 'object')
+        options = OSUtils.merge(OSUtils.merge({}, options), urls.pop());
     var count = urls.length,
         results = new Array(count),
         target = options.target && $(options.target);
@@ -40,13 +40,13 @@ OSDoc.APIDoc.prototype.load = function(url, supplementalOptions) {
 }
 
 /// Parse +text+.  If +options.target+ is specified, update it.
-OSDoc.APIDoc.prototype.parse = function(text, options) {
+OSDoc.APIViewer.prototype.parse = function(text, options) {
     this.text = OSDoc.stripHeader(text);
     this.updateTarget(this.options.staged && 0, options);
     return this;
 }
 
-OSDoc.APIDoc.prototype.updateTarget = function(stage, options) {
+OSDoc.APIViewer.prototype.updateTarget = function(stage, options) {
     var target = options.target && $(options.target);
     if (!target) return options.onSuccess && options.onSuccess();
 
@@ -74,10 +74,10 @@ OSDoc.APIDoc.prototype.updateTarget = function(stage, options) {
     return this;
 }
 
-OSDoc.APIDoc.prototype.getTestText = function() {
+OSDoc.APIViewer.prototype.getTestText = function() {
     return this.model.getTestText();
 }
 
-OSDoc.APIDoc.prototype.runTests = function() {
+OSDoc.APIViewer.prototype.runTests = function() {
     return this.testResults = this.model.runTests();
 }

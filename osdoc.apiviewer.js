@@ -14,27 +14,24 @@ OSDoc.APIViewer = function(options) {
 };
 
 /// Load +url+ and parse its contents.
-OSDoc.APIViewer.prototype.load = function(url, _options) {
+OSDoc.APIViewer.prototype.load = function(urls, _options) {
     var self = this,
-        options = this.options,
-        urls = Array.prototype.slice.call(arguments, 0);
-    if (typeof urls[urls.length-1] == 'object')
-        options = OSUtils.merge(OSUtils.merge({}, options), urls.pop());
+        options = Hash.merge(this.options, _options || {});
+    if (typeof urls == 'string')
+        urls = [urls];
     var count = urls.length,
         results = new Array(count),
-        target = options.target && $(options.target);
+        target = options.target;
     target && (target.innerHTML = OSDoc.loadingHeader);
-    urls.each(function(url, ix) {
+    urls.forEach(function(url, ix) {
         if (options.bustCache)
             url += (/\?/(url) ? '&' : '?') + 'ts=' + new Date().getTime();
-        new Ajax.Request(
-            url,
-            {method: 'GET',
-             onSuccess: receive.reporting().bind(this, ix)});
+        $.get(url,
+              receive.reporting().bind(this, ix));
     });
     return this;
     function receive(ix, response) {
-        results[ix] = response.responseText;
+        results[ix] = response;
         --count || self.parse(results.join(''), options);
     }
 }
@@ -47,7 +44,7 @@ OSDoc.APIViewer.prototype.parse = function(text, options) {
 }
 
 OSDoc.APIViewer.prototype.updateTarget = function(stage, options) {
-    var target = options.target && $(options.target);
+    var target = options.target;
     if (!target) return options.onSuccess && options.onSuccess();
 
     var text = this.text,

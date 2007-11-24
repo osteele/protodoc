@@ -12,14 +12,13 @@ OSDoc.ExampleViewer = function(options) {
 // Load +url+ and parse its contents.
 OSDoc.ExampleViewer.prototype.load = function(url, options) {
     options = OSUtils.merge(this.options, options||{});
-    var target = options.target && $(options.target);
+    var target = options.target;
     target && (target.innerHTML = OSDoc.loadingHeader);
-    new Ajax.Request(
+    new $.get(
         url,
-        {method: 'GET',
-         onSuccess: function(response) {
-             this.parse(response.responseText, options);
-         }.bind(this).reporting()});
+        function(response) {
+            this.parse(response, options);
+        }.bind(this).reporting());
     return this;
 }
 
@@ -31,7 +30,7 @@ OSDoc.ExampleViewer.prototype.parse = function(text, options) {
 }
 
 OSDoc.ExampleViewer.prototype.updateTarget = function(stage, options) {
-    var target = options.target && $(options.target);
+    var target = options.target;
     if (!target) return options.onSuccess && options.onSuccess();
 
     var text = this.text;

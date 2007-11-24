@@ -24,7 +24,7 @@ Function.prototype.reporting = function() {
     var fn = this;
     return function() {
         try {
-            fn.apply(this, arguments);
+            return fn.apply(this, arguments);
         } catch (e) {
             window.console && console.error(e);
             throw e;

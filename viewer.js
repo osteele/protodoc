@@ -9,39 +9,46 @@ function DocViewer(options) {
 
 DocViewer.prototype.initialize = function(options) {
     var examples = options.examples,
-        api = options.api;
-    
-    $('noscript').innerHTML = $('noscript').innerHTML.replace(
+        api = options.api,
+        noscript = $('#noscript')[0];
+
+    noscript && (noscript.innerHTML = noscript.innerHTML.replace(
             /<span.*?<\/span>/,
-        'If this message remains on the screen,');
+        'If this message remains on the screen,'));
     new OSDoc.ExampleViewer().load(examples, {
         onSuccess: this.noteCompletion.bind(this, 'examples'),
-        target: 'examples'});
+        target: $('#examples')[0]});
     gDocs = new OSDoc.APIViewer().load(api, {
         onSuccess: this.noteCompletion.bind(this, 'docs'),
-        target: 'docs'});
+        target: $('#docs')[0]});
     initializeHeaderToggle();
     initializeTestLinks();
 }
 
 function initializeHeaderToggle() {
-    Event.observe('header-toggle', 'click', updateHeaderState);
+    $('#header-toggle').click(updateHeaderState);
     updateHeaderState();
     function updateHeaderState(e) {
-        $$('#header').invoke($F('header-toggle') ? 'show' : 'hide');
+        var show = $('#header-toggle')[0].checked;
+        $('#header').invoke(show ? 'show' : 'hide');
     }
 }
 
+jQuery.fn.invoke = function(fname) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return this[fname].apply(this, args);
+}
+
 function initializeTestLinks() {
-    Event.observe('run-tests', 'click', function(e) {
-        Event.stop(e);
+    $('#run-tests').click(function(e) {
         var results = gDocs.runTests();
         alert(results.toHTML());
+        return false;
     });
-    Event.observe('write-tests', 'click', function(e) {
-        Event.stop(e);
+    $('#write-tests').click(function(e) {
         var text = gDocs.getTestText();
         document.write('<pre>'+text.escapeHTML()+'</pre>');
+        return false;
     });
 }
 
@@ -53,12 +60,13 @@ DocViewer.prototype.noteCompletion = function(flag) {
         return;
     onload && onload();
     $('noscript').hide();
-    var inputs = $$('kbd');
+    var inputs = $('kbd');
     if (window.location.search.match(/[\?&]test\b/)) {
         var results = gDocs.runTests();
         alert(results.toHTML());
     }
     scheduleGradientReset();
+    $(window).resize(scheduleGradientReset);
 }
 
 
@@ -78,19 +86,20 @@ var scheduleGradientReset = (function() {
 })();
 
 function resetGradients() {
-    resetGradient('intro', 0xeeeeff);
+    resetGradient('#intro', 0xeeeeff);
 }
 
 function resetGradient(name, startColor, endColor) {
     if (arguments.length < 3) endColor = 0xffffff;
-    var parent = $(name);
-    var old = ($A(parent.childNodes).select('.className=="grad"'.lambda()));
-    old.each(parent.removeChild.bind(parent));
-    var children = $A(parent.childNodes).slice(0);
+
+    $(name + ' .grad').remove();
+    var old = $(name + ' *');
+    old.indexOf = Array.prototype.indexOf;
     OSGradient.applyGradient({'gradient-start-color': startColor,
                               'gradient-end-color': endColor,
                               'border-radius': 15},
-                             parent);
-    var newed = $A(parent.childNodes).reject(children.include.bind(children));
-    newed.each('.className="grad"'.lambda());
+                             $(name)[0]);
+    $(name + ' *').each(function() {
+        old.indexOf(this) >= 0 || $(this).addClass('grad');
+    });
 }

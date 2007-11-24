@@ -74,7 +74,7 @@ var GlobalContext = Model.extend({
     },
 
     eachBlock: function(fn) {
-        this.blocks.each(fn);
+        this.blocks.forEach(fn);
     }
 });
 

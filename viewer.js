@@ -59,7 +59,7 @@ DocViewer.prototype.noteCompletion = function(flag) {
     if (!flags.docs || !flags.examples)
         return;
     onload && onload();
-    $('noscript').hide();
+    $('#noscript').hide();
     var inputs = $('kbd');
     if (window.location.search.match(/[\?&]test\b/)) {
         var results = gDocs.runTests();
@@ -90,6 +90,7 @@ function resetGradients() {
 }
 
 function resetGradient(name, startColor, endColor) {
+    if (!window.OSGradient) return;
     if (arguments.length < 3) endColor = 0xffffff;
 
     $(name + ' .grad').remove();

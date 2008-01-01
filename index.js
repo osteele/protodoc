@@ -1,4 +1,4 @@
-/* 
+/*
  * Author: Oliver Steele
  * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
  * License: MIT License
@@ -7,50 +7,23 @@
  * Modified: 2007-07-16
  */
 
-function initialize() {
-    var src = (window.location.search.match(/[\?&]source=([^&]*)/)||{})[1];
-    if (!src && !window.location.search.match(/[\?&]test\b/)) {
-        $$('#noscript', 'table', '#header hr').invoke('hide');
-        return;
-    }
-    src || new OSDoc.APIDoc({onSuccess: noteCompletion.saturate('examples'), target: $('examples')}).load('osdoc.examples.js');
-    src && Element.hide('examples-column');
-    src && noteCompletion('examples');
-    new OSDoc.APIDoc({onSuccess: noteCompletion.saturate('api'),
-                      all: src,
-                      target: $('docs')}).load(src || 'osdoc.apidoc.js');
-    initializeHeaderToggle();
-    initializeTestLinks();
-}
+$(initialize);
 
-function initializeHeaderToggle() {
-    Event.observe('header-toggle', 'click', updateHeaderState);
-    updateHeaderState();
-    function updateHeaderState(e) {
-        $$('#header').invoke($F('header-toggle') ? 'show' : 'hide');
-    }
+function initialize() {
+    new DocViewer({api:'test.js',
+                   examples:'test.js'});
+    initializeTestLinks()
 }
 
 function initializeTestLinks() {
-    Event.observe('run-tests', 'click', function(e) {
-        Event.stop(e);
+    $('#run-tests').click(function(e) {
         var results = gDocs.runTests();
         alert(results.toHTML());
+        return false;
     });
-    Event.observe('write-tests', 'click', function(e) {
-        Event.stop(e);
+    $('#write-tests').click(function(e) {
         var text = gDocs.createTestText();
         document.write('<pre>'+text.escapeHTML()+'</pre>');
+        return false;
     });
 }
-
-function noteCompletion(flag) {
-    var callee = arguments.callee;
-    callee[flag] = true;
-    if (callee.docs && callee.examples) {
-        $('noscript').hide();
-        var inputs = $$('.input');
-    }
-}
-
-Event.observe(window, 'load', initialize);

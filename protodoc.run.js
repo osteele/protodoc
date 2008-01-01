@@ -2,29 +2,29 @@
  * Author: Oliver Steele
  * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
  * License: MIT License
- * Source: http://osteele.com/javascripts/osdoc
+ * Source: http://osteele.com/javascripts/protodoc
  */
 
 var window = {};
 document = {getElementsByTagName:function(){return []}};
-window.OSDoc = {loaded:true};
+window.Protodoc = {loaded:true};
 window.Prototype = {Version:1.5};
 load('../collection-utils.js');
 load('../functional/functional.js');
 load('../functional/to-function.js');
 load('Base.js')
-load('osdoc.js');
-load('osdoc.utils.js');
-load('osdoc.model.js');
-load('osdoc.parser.js');
-load('osdoc.doctest.js');
-load('osdoc.output.html.js');
+load('protodoc.js');
+load('protodoc.utils.js');
+load('protodoc.model.js');
+load('protodoc.parser.js');
+load('protodoc.doctest.js');
+load('protodoc.output.html.js');
 
 var pluck = Functional.pluck;
 
 function process(files, options) {
     var text = files.map('readFile(_)').join(''),
-        model = new OSDoc.Parser({}).parse(text);
+        model = new Protodoc.Parser({}).parse(text);
     if (options.test) {
         print(model.runTests().toHTML());
     } else if (options.tests) {
@@ -37,7 +37,7 @@ function process(files, options) {
 }
 
 function usage() {
-    print("usage: osdoc.run.js [options] [files]");
+    print("usage: protodoc.run.js [options] [files]");
     //exit(1);
 }
 

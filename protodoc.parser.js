@@ -4,11 +4,11 @@
  * Parser
  */
 
-OSDoc.Parser = function(options) {
+Protodoc.Parser = function(options) {
     this.options = options;
 }
 
-OSDoc.Parser.prototype.parse = function(text) {
+Protodoc.Parser.prototype.parse = function(text) {
     var id = '[a-zA-Z_$][a-zA-Z_$0=9]*';
     var parser = new StateMachineParser({
         tokens: {

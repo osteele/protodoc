@@ -1,40 +1,40 @@
-Next:
+* Next
 - factor into builder
-- rename -> protodoc, if it's available
 
-Fix HTML:
+* Fix HTML
 - record -> definition
 - target -> namespace?
 
-Code cleanup:
+* Code cleanup
 - single vs. multiline
 - hoist parsing for comment types: signature
 - use builders
 - hoist statemachine initialiation
 - parsing positions
+- use package system
 
-Completion:
+* Completion
 - autoinclude Base
 - test on other libraries
 - docs
 
-Later:
+* Later
 - sections are always added in the last container (fix for roll-up)
 - optimize statemachine scanner
 - make parsers, builders, renderers, paragraph formatter configurable
 - clean up format vs. render
 - pass in logger
 
-Testing:
+* Testing
 http://osteele.dev/sources/javascript/osdoc/?source=test.js
 - prototype, scriptaculous, protoscript, yui, jquery, client and server-side libraries, ...
 
-Release checklist:
+* Release checklist
 - test in other browsers
 - remove the cache-busting?
 - test w/out prototype?
 
-Future:
+* Future
 - @nodoc
 - document object slots
 - pluggable formatters

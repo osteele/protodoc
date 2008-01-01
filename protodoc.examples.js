@@ -4,16 +4,16 @@
 //   headingLevel: hn for topmost headings; default 3
 //   target: an HTML Element that is set to the docs on completion
 //   onSuccess: called when load completes
-OSDoc.ExampleViewer = function(options) {
+Protodoc.ExampleViewer = function(options) {
     this.options = OSUtils.merge({headingLevel: 3,
                                   staged: true}, options||{});
 };
 
 // Load +url+ and parse its contents.
-OSDoc.ExampleViewer.prototype.load = function(url, options) {
+Protodoc.ExampleViewer.prototype.load = function(url, options) {
     options = OSUtils.merge(this.options, options||{});
     var target = options.target;
-    target && (target.innerHTML = OSDoc.loadingHeader);
+    target && (target.innerHTML = Protodoc.loadingHeader);
     new $.get(
         url,
         function(response) {
@@ -23,23 +23,23 @@ OSDoc.ExampleViewer.prototype.load = function(url, options) {
 }
 
 // Parse +text+.  If +options.target+ is specified, update it.
-OSDoc.ExampleViewer.prototype.parse = function(text, options) {
-    this.text = OSDoc.stripHeader(text);
+Protodoc.ExampleViewer.prototype.parse = function(text, options) {
+    this.text = Protodoc.stripHeader(text);
     this.updateTarget(this.options.staged && 0, options);
     return this;
 }
 
-OSDoc.ExampleViewer.prototype.updateTarget = function(stage, options) {
+Protodoc.ExampleViewer.prototype.updateTarget = function(stage, options) {
     var target = options.target;
     if (!target) return options.onSuccess && options.onSuccess();
 
     var text = this.text;
     switch (stage) {
     case 0:
-        target.innerHTML = OSDoc.previewText(text);
+        target.innerHTML = Protodoc.previewText(text);
         break;
     case 1:
-        target.innerHTML = OSDoc.processingHeader + this.toHTML(true);
+        target.innerHTML = Protodoc.processingHeader + this.toHTML(true);
         break;
     case 2:
         this.runExamples();
@@ -51,7 +51,7 @@ OSDoc.ExampleViewer.prototype.updateTarget = function(stage, options) {
     return this;
 }
 
-OSDoc.ExampleViewer.prototype.toHTML = function(fast) {
+Protodoc.ExampleViewer.prototype.toHTML = function(fast) {
     var self = this;
     var chunks = (OSUtils.unindent(this.text)
                   .escapeHTML()
@@ -81,7 +81,7 @@ OSDoc.ExampleViewer.prototype.toHTML = function(fast) {
     lines.push('</pre>');
     var html = lines.join('').replace(/((?:\/\/+.*\n)+)/g, function(text) {
         if (!fast)
-            text = OSDoc.inlineFormat(text);
+            text = Protodoc.inlineFormat(text);
         text = text.replace(/\/\/  (.*)/g, '<pre>$1</pre>');
         text = text.replace(/\/\//g, ' ');
         text = text.replace(/(\^+)\s*(.*)/, function(_, level, title) {
@@ -93,7 +93,7 @@ OSDoc.ExampleViewer.prototype.toHTML = function(fast) {
     return html;
 }
 
-OSDoc.ExampleViewer.prototype.runExamples = function() {
+Protodoc.ExampleViewer.prototype.runExamples = function() {
     var results = this.trace = [];
     try {
         trace = function() {

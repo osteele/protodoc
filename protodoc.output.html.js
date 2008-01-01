@@ -108,7 +108,7 @@ Function.prototype.hoisted = function() {
 
 HTMLCommentFormatter.byType = {
     equivalence: function(text, writer) {
-        var html = OSDoc.toMathHTML(text).replace(/==/, '=<sub class="def">def</sub> ')
+        var html = Protodoc.toMathHTML(text).replace(/==/, '=<sub class="def">def</sub> ')
         writer.append('<pre class="equivalence">', html, '</pre>');
     }.hoisted(),
 
@@ -135,7 +135,7 @@ HTMLCommentFormatter.byType = {
 
     paragraph: function(lines, writer) {
         writer.append('<p class="description">',
-                      this.options.quick ? lines : OSDoc.inlineFormat(lines.join(' ')),
+                      this.options.quick ? lines : Protodoc.inlineFormat(lines.join(' ')),
                       '</p>');
     },
 

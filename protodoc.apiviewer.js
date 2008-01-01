@@ -8,13 +8,13 @@
  *   target: an HTML Element that is set to the docs on completion
  *   onSuccess: called when load completes
  */
-OSDoc.APIViewer = function(options) {
+Protodoc.APIViewer = function(options) {
     this.options = OSUtils.merge({headingLevel: 3,
                                   staged: true}, options||{});
 };
 
 /// Load +url+ and parse its contents.
-OSDoc.APIViewer.prototype.load = function(urls, _options) {
+Protodoc.APIViewer.prototype.load = function(urls, _options) {
     var self = this,
         options = Hash.merge(this.options, _options || {});
     if (typeof urls == 'string')
@@ -22,7 +22,7 @@ OSDoc.APIViewer.prototype.load = function(urls, _options) {
     var count = urls.length,
         results = new Array(count),
         target = options.target;
-    target && (target.innerHTML = OSDoc.loadingHeader);
+    target && (target.innerHTML = Protodoc.loadingHeader);
     urls.forEach(function(url, ix) {
         if (options.bustCache)
             url += (/\?/(url) ? '&' : '?') + 'ts=' + new Date().getTime();
@@ -37,13 +37,13 @@ OSDoc.APIViewer.prototype.load = function(urls, _options) {
 }
 
 /// Parse +text+.  If +options.target+ is specified, update it.
-OSDoc.APIViewer.prototype.parse = function(text, options) {
-    this.text = OSDoc.stripHeader(text);
+Protodoc.APIViewer.prototype.parse = function(text, options) {
+    this.text = Protodoc.stripHeader(text);
     this.updateTarget(this.options.staged && 0, options);
     return this;
 }
 
-OSDoc.APIViewer.prototype.updateTarget = function(stage, options) {
+Protodoc.APIViewer.prototype.updateTarget = function(stage, options) {
     var target = options.target;
     if (!target) return options.onSuccess && options.onSuccess();
 
@@ -51,14 +51,14 @@ OSDoc.APIViewer.prototype.updateTarget = function(stage, options) {
         formatOptions = {headingLevel:options.headingLevel};
     switch (stage) {
     case 0:
-        target.innerHTML = OSDoc.previewText(text);
+        target.innerHTML = Protodoc.previewText(text);
         break;
     case 1:
         formatOptions.quicker = true;
     case 2:
         formatOptions.quick = true;
     default:
-        var model = this.model = this.model || new OSDoc.Parser(options).parse(text),
+        var model = this.model = this.model || new Protodoc.Parser(options).parse(text),
             formatter = new HTMLFormatter(formatOptions),
             html = formatter.render(model);
         target.innerHTML = html;
@@ -71,10 +71,10 @@ OSDoc.APIViewer.prototype.updateTarget = function(stage, options) {
     return this;
 }
 
-OSDoc.APIViewer.prototype.getTestText = function() {
+Protodoc.APIViewer.prototype.getTestText = function() {
     return this.model.getTestText();
 }
 
-OSDoc.APIViewer.prototype.runTests = function() {
+Protodoc.APIViewer.prototype.runTests = function() {
     return this.testResults = this.model.runTests();
 }

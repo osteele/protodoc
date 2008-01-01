@@ -15,10 +15,10 @@ DocViewer.prototype.initialize = function(options) {
     noscript && (noscript.innerHTML = noscript.innerHTML.replace(
             /<span.*?<\/span>/,
         'If this message remains on the screen,'));
-    new OSDoc.ExampleViewer().load(examples, {
+    new Protodoc.ExampleViewer().load(examples, {
         onSuccess: this.noteCompletion.bind(this, 'examples'),
         target: $('#examples')[0]});
-    gDocs = new OSDoc.APIViewer().load(api, {
+    gDocs = new Protodoc.APIViewer().load(api, {
         onSuccess: this.noteCompletion.bind(this, 'docs'),
         target: $('#docs')[0]});
     initializeHeaderToggle();

@@ -46,15 +46,15 @@ Model.prototype.getTestText = function() {
 Model.prototype.runTests = function() {
     var tests = [],
         failures = [];
-    OSDoc.testScope = {};
+    Protodoc.testScope = {};
     this.getTests({children:true}).each(function(test) {
         var defn = test.definition;
         tests.push(test);
-        var text = test.text.replace(/^\s*var\s+/, 'OSDoc.testScope.');
-        text = text.replace(/^\s*function\s+([A-Z_$][A-Z_$\d]*)/i, 'OSDoc.testScope.$1 = function');
+        var text = test.text.replace(/^\s*var\s+/, 'Protodoc.testScope.');
+        text = text.replace(/^\s*function\s+([A-Z_$][A-Z_$\d]*)/i, 'Protodoc.testScope.$1 = function');
         var result, error;
         try {
-            with (OSDoc.testScope)
+            with (Protodoc.testScope)
                result = eval(text);
         } catch (e) {
             error = e;

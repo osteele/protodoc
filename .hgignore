@@ -3,5 +3,4 @@ syntax: glob
 \#*\#
 .\#*
 
-functional/functional.min.js*
-functional/*.tgz
+*.tgz

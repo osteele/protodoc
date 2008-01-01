@@ -1,3 +1,7 @@
+/** These are just some testing examples, not the actual
+ * protodoc documentation.
+ */
+
 /**
  * Invoking the function returned by this function only passes `n`
  * arguments to the underlying function.  If the underlying function

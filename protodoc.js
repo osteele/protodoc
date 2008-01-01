@@ -19,46 +19,46 @@ var OSLoader = {
     }
 }
 
-var OSDoc = {
+var Protodoc = {
     // for now, we need these to already be loaded
     checkRequirements: function() {
         //if (!window.Prototype || parseFloat(Prototype.Version) < 1.5)
-        //    throw "OSDoc requires the Prototype JavaScript framework version >= 1.5";
+        //    throw "Protodoc requires the Prototype JavaScript framework version >= 1.5";
         if (!window.Functional)
-            throw "OSDoc requires the Functional JavaScript library";
+            throw "Protodoc requires the Functional JavaScript library";
     },
 
     load: function() {
-        OSDoc.checkRequirements();
+        Protodoc.checkRequirements();
         Functional.install();
-        var src = map('.src', $('script[@src]')).grep(/\bosdoc\.js/)[0];
+        var src = map('.src', $('script[@src]')).grep(/\bprotodoc\.js/)[0];
         if (!src) return;
         var modules = Functional.K([_,'utils,examples,model,parser,doctest,apiviewer,output.html']).guard('!')(src.match(/\?.*load=([a-z,]*)/))[1].split(',');
-        map('a -> b -> a+"osdoc."+b+".js"'.call(null, src.replace(/[^\/]*$/,'')), modules).each(OSLoader.require.bind(OSLoader));
+        map('a -> b -> a+"protodoc."+b+".js"'.call(null, src.replace(/[^\/]*$/,'')), modules).each(OSLoader.require.bind(OSLoader));
     }
 }
 
-OSDoc.loadingHeader = '<p class="processing">Loading...</p>';
-OSDoc.processingHeader = '<p class="processing">Formatting...</p>';
+Protodoc.loadingHeader = '<p class="processing">Loading...</p>';
+Protodoc.processingHeader = '<p class="processing">Formatting...</p>';
 
 /// Return a string for use in the preview.
-OSDoc.previewText = function(text) {
-    return OSDoc.processingHeader + '<pre>' + text.escapeHTML() + '</pre>';
+Protodoc.previewText = function(text) {
+    return Protodoc.processingHeader + '<pre>' + text.escapeHTML() + '</pre>';
 }
 
 /// Remove the comment at the top of the file if it contains the text
 /// 'copyright', because it's probably boilerplate
-OSDoc.stripHeader = function(text) {
+Protodoc.stripHeader = function(text) {
     return text.replace(/^\s*\/\*[^*](?:.|\n)*?\*\/[ \t]*/,
                         function(s) {
                             return s.match(/copyright/i) ? '' : s;
                         });
 }
 
-OSDoc.inlineFormat = function(html, variables) {
+Protodoc.inlineFormat = function(html, variables) {
     return (html.replace(/\[(https?:.*?)\]/, '<a href="$1">$1</a>')
             .replace(/\*(\w+?)\*/g, '<em>$1</em>')
-            .replace(/\$(.+?)\$/g, OSDoc.toMathHTML.compose('_ s -> s'))
+            .replace(/\$(.+?)\$/g, Protodoc.toMathHTML.compose('_ s -> s'))
             .replace(/\`(.+?)\`/g, variables
                      ? function(_, str) {
                          if (variables[str])
@@ -69,7 +69,7 @@ OSDoc.inlineFormat = function(html, variables) {
            );
 }
 
-OSDoc.toMathHTML = function(text) {
+Protodoc.toMathHTML = function(text) {
     return '<span class="math">' + text.replace(/[a-z]+/gi, function(w) {
         return '<var>'+w+'</var>';
     }).replace(/<\/var>(?:(\d+)|_\{(.*?)\})/g, function(_, sub, sub2) {
@@ -96,4 +96,4 @@ function makeEnum(words) {
  * Finally:
  */
 
-window.OSDoc.loaded || OSDoc.load();
+window.Protodoc.loaded || Protodoc.load();

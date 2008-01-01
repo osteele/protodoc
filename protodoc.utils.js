@@ -2,7 +2,7 @@
  * Author: Oliver Steele
  * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
  * License: MIT License
- * Source: http://osteele.com/javascripts/osdoc
+ * Source: http://osteele.com/javascripts/protodoc
  */
 
 var OSUtils = window.OSUtils || {};

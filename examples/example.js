@@ -10,8 +10,8 @@
 $(initialize);
 
 function initialize() {
-    new DocViewer({api:'examples/test.js',
-                   examples:'examples/examples.js'});
+    new DocViewer({api: 'test.js',
+                   examples: 'examples.js'});
     initializeTestLinks()
 }
 

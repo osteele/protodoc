@@ -5,7 +5,7 @@
 var OSLoader = {
     loadedModules: (function(){
         var loaded = [];
-        var elements = $('script[@src]');
+        var elements = $('script[src]');
         for (var i = 0; i < elements.length; i++)
             loaded.push(elements[i].src);
         return loaded;
@@ -31,7 +31,7 @@ var Protodoc = {
     load: function() {
         Protodoc.checkRequirements();
         Functional.install();
-        var src = map('.src', $('script[@src]')).grep(/\bprotodoc\.js/)[0];
+        var src = map('.src', $('script[src]')).grep(/\bprotodoc\.js/)[0];
         if (!src) return;
         var modules = Functional.K([_,'utils,examples,model,parser,doctest,apiviewer,output.html']).guard('!')(src.match(/\?.*load=([a-z,]*)/))[1].split(',');
         map('a -> b -> a+"protodoc."+b+".js"'.call(null, src.replace(/[^\/]*$/,'')), modules).each(OSLoader.require.bind(OSLoader));
